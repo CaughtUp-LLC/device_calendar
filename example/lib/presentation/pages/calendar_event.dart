@@ -665,6 +665,16 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
                             setState(() {
                               _recurrenceRuleEndType = value;
                             });
+
+                            // Check if recurringEndDate is needed
+                            if (_recurrenceRuleEndType == RecurrenceRuleEndType.SpecifiedEndDate){
+                              // set recurringEndDate for date picker to use
+                              // this date doesn't have to be in local time since it is a specific date.
+                              _recurrenceEndDate = getDateFromDateTime(_event.end);;
+                            } else {
+                              // remove recurringEndDate
+                              _recurrenceEndDate = null;
+                            }
                           },
                           value: _recurrenceRuleEndType,
                           items: RecurrenceRuleEndType.values
@@ -954,5 +964,10 @@ class _CalendarEventPageState extends State<CalendarEventPage> {
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+  }
+
+  /// Retrieve the DateTime of the year, month, and day of [dateValue]
+  DateTime getDateFromDateTime(DateTime dateValue) {
+    return DateTime(dateValue.year, dateValue.month, dateValue.day);
   }
 }
